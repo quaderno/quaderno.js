@@ -224,4 +224,4 @@ All the handlers accept two arguments, the status and the response.
 * If the success handler is called, it will create an input with the customer id and will send the form to your server.
 * If the error handler is called it will show the error and reactivate the button
 
-Take a look at the [full example](https://gist.github.com/xxswingxx/483f651d2a282a27f1bd) form to see everything put together.
+Take a look at the [full example](example.html) form to see everything put together.
