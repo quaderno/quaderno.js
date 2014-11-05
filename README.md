@@ -16,8 +16,10 @@ At a high level, here's what you'll accomplish in this tutorial:
 
 First, include Stripe.js and quaderno-stripe.js in the page:
 
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-    <script type="text/javascript" src="http://js.quaderno.io/v1/"></script>
+```
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript" src="http://js.quaderno.io/v1/"></script>
+```
 
 To prevent problems with some older browsers, we recommend putting the script tag in the `<head>` tag of your page, or as a direct descendant of the `<body>` at the end of your page.
 
@@ -29,28 +31,28 @@ You must add some extra data to your classic Stripe form:
 * **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations.
   
 ```
-    <form action="" method="POST" id="payment-form" 
-      data-key="YOUR_PUBLISHABLE_KEY" 
-      data-plan="YOUR_PLAN_ID" 
-      data-taxes="excluded" 
-      data-amount="900">
-      ...
-    </form>
+<form action="" method="POST" id="payment-form" 
+  data-key="YOUR_PUBLISHABLE_KEY" 
+  data-plan="YOUR_PLAN_ID" 
+  data-taxes="excluded" 
+  data-amount="900">
+  ...
+</form>
 ```
 
 If you add the `amount` data and want to show live previews to the customer, you can add the classes `quaderno-subtotal`, `quaderno-taxes`, and `quaderno-total` to any DOM element to modify its inner HTML. For example:
 
 ```
-    $<span class="quaderno-subtotal"></span>
-    $<span class="quaderno-taxes"></span>
-    $<span class="quaderno-total"></span>
+$<span class="quaderno-subtotal"></span>
+$<span class="quaderno-taxes"></span>
+$<span class="quaderno-total"></span>
 ```
 
 In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form. A complete Quaderno with Stripe form would look like this:
 
 ```
-    <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
-        <span class="payment-errors"></span>
+<form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
+    <span class="payment-errors"></span>
 
         <!-- Basic Stripe form fields -->
         <div class="form-row">
