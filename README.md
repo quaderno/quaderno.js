@@ -27,8 +27,8 @@ You must add some extra data to your classic Stripe form:
 * **plan:** (Mandatory) the plan id.
 * **taxes:** (Optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
 * **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations.
-
----
+  
+```
     <form action="" method="POST" id="payment-form" 
       data-key="YOUR_PUBLISHABLE_KEY" 
       data-plan="YOUR_PLAN_ID" 
@@ -36,15 +36,19 @@ You must add some extra data to your classic Stripe form:
       data-amount="900">
       ...
     </form>
+```
 
 If you add the `amount` data and want to show live previews to the customer, you can add the classes `quaderno-subtotal`, `quaderno-taxes`, and `quaderno-total` to any DOM element to modify its inner HTML. For example:
 
+```
     $<span class="quaderno-subtotal"></span>
     $<span class="quaderno-taxes"></span>
     $<span class="quaderno-total"></span>
+```
 
 In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form. A complete Quaderno with Stripe form would look like this:
 
+```
     <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
         <span class="payment-errors"></span>
 
@@ -116,6 +120,7 @@ In order to calculate the right tax for your customer and create correct contact
         
         <button type="submit">Submit Payment</button>
     </form>
+```
 
 Notice that the inputs also has the data-stripe attribute. It is mandatory to include this attribute in at least the **first name** input to prevent unexpected results. By not including it in the **last name**, **country**, **postal code** or **tax id** will result in not exact taxes calculations due to lack of information. 
 
@@ -148,7 +153,7 @@ The second argument **stripeResponseHandler** is a callback that handles the res
 * status is one of the status codes described in the [Stripe API docs](https://stripe.com/docs/api#errors).
 * response is an Object with these properties:
 
----
+```
     {  
         id: "tok_u5dg20Gra", // String of token identifier,  
         card: {...}, // Dictionary of the card used to create the token  
@@ -158,7 +163,7 @@ The second argument **stripeResponseHandler** is a callback that handles the res
         object: "token", // String identifier of the type of object, always "token"  
         used: false // Boolean of whether this token has been used  
     }  
-
+```
 
 ###Step 3: Create the Stripe subscription via Quaderno and send the data to the server
 
@@ -202,31 +207,32 @@ All the handlers accept two arguments, the status and the response.
 * status: The code of the request (200, 201, 401, etc.).
 * response: Contains a Javascript object with the following structure:
 
----
+```
     {
         message: 'The message of the response as a string.',
         customer: 'The id of the created customer in Quaderno (only present if the response was a success).'
     }
-
+```
 
 * The success handler code would be something like this:
 
----
+```
     function quadernoSuccessHandler(status, response) {
         $form = $('#payment-form');
         $form.append($('<input type="hidden" name="customerId" />').val(response.customer);
         $form.get(0).submit();
     }
+```
 
 * The error handler code would be like this: 
 
----
+```
     function quadernoErrorHandler(status, response) {
         $form = $('#payment-form');
         $form.find('button').prop('disabled', false);
         $form.find('.payment-errors').text(response.message);
     }
-
+```
 
 * If the success handler is called, it will create an input with the customer id and will send the form to your server.
 * If the error handler is called it will show the error and reactivate the button
