@@ -1,18 +1,18 @@
-#Quaderno-Stripe.js
+#QuadernoStripe.js
 
 A general purpose library to create Stripe subscriptions, automating the taxes calculation and the Quaderno integration.
 
-##Installing the Quaderno with Stripe js library
+##Installing the QuadernoStripe.js library
 
-This tutorial helps you to integrate Quaderno with Stripe in order to create forms prepared to create subscriptions.
+This tutorial helps you to integrate Quaderno with Stripe in order to create subscriptions with taxes (if needed).
 
 At a high level, here's what you'll accomplish in this tutorial:
 
 1. Set the form and collect credit card information with Stripe.js
-2. Convert those details to what Stripe call a single-use toke
-4. Create the Stripe subscription via Quaderno, and send the customer id with the rest of your form, to your server
+2. Convert those details to what Stripe call a single-use token
+3. Create the Stripe subscription via Quaderno and send the data to your server
 
-##Step 1: Setting the form basics and collecting credit card information
+###Step 1: Setting the form basics and collecting credit card information
 
 First, include Stripe.js and quaderno-stripe.js in the page:
 
@@ -21,12 +21,21 @@ First, include Stripe.js and quaderno-stripe.js in the page:
 
 To prevent problems with some older browsers, we recommend putting the script tag in the `<head>` tag of your page, or as a direct descendant of the `<body>` at the end of your page.
 
-In addition to your classic Stripe form, you must add some data to the form:
+You must add some extra data to your classic Stripe form:
 
 * **key:** (Mandatory) your Stripe publishable key.
 * **plan:** (Mandatory) the plan id.
 * **taxes:** (Optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
-* **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations. 
+* **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations.
+
+---
+    <form action="" method="POST" id="payment-form" 
+      data-key="YOUR_PUBLISHABLE_KEY" 
+      data-plan="YOUR_PLAN_ID" 
+      data-taxes="excluded" 
+      data-amount="900">
+      ...
+    </form>
 
 If you add the `amount` data and want to show live previews to the customer, you can add the classes `quaderno-subtotal`, `quaderno-taxes`, and `quaderno-total` to any DOM element to modify its inner HTML. For example:
 
@@ -36,7 +45,7 @@ If you add the `amount` data and want to show live previews to the customer, you
 
 In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form. A complete Quaderno with Stripe form would look like this:
 
-    <form action="" method="POST" id="payment-form" data-key="my_stripe_publishable_key" data-plan="my_plan_id" data-taxes="excluded" data-amount="1599">
+    <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
         <span class="payment-errors"></span>
 
         <!-- Basic Stripe form fields -->
@@ -104,14 +113,15 @@ In order to calculate the right tax for your customer and create correct contact
             Tax ID:
             <input data-stripe="tax_id"/>
         </label>
+        
         <button type="submit">Submit Payment</button>
     </form>
 
 Notice that the inputs also has the data-stripe attribute. It is mandatory to include this attribute in at least the **first name** input to prevent unexpected results. By not including it in the **last name**, **country**, **postal code** or **tax id** will result in not exact taxes calculations due to lack of information. 
 
-And that's it. By adding the Quaderno js library it will initialize the Stripe library for you. If you want, you can add a name to those extra field to submit them to your server.
+And that's it! By adding the QuadernoStripe.js library it will initialize the Stripe library for you. If you want, you can add a name to those extra field to submit them to your server.
 
-##Step 2: Create a single use token
+###Step 2: Create a single use token
 
 Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separated script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token. 
 
@@ -119,12 +129,9 @@ Next, we will want to create a single-use token that can be used to represent th
         jQuery(function($) {
             $('#payment-form').submit(function(event) {
                 var $form = $(this);
-
                 // Disable the submit button to prevent repeated clicks
                 $form.find('button').prop('disabled', true);
-
                 Stripe.card.createToken($form, stripeResponseHandler);
-
                 // Prevent the form from submitting with the default action
                 return false;
             });
@@ -153,7 +160,7 @@ The second argument **stripeResponseHandler** is a callback that handles the res
     }  
 
 
-##Step 3: Create the Stripe subscription via Quaderno and send the data to the server
+###Step 3: Create the Stripe subscription via Quaderno and send the data to the server
 
 After retrieving the response from ** Stripe.card.createToken** in  **stripeResponseHandler**. In the example, **stripeResponseHandler** works as follows:
 
@@ -188,7 +195,7 @@ After retrieving the card token, now we are ready to create the subscription via
 
 * success: If Quaderno manages to create the subscription with no errors at all.
 * error: If any error prevents from creating the subscription, this handler will be called.
-* complete: Wether if the response is a success or an error, this handler will be called. The programmer is responsible to manage the response status
+* complete: Wether if the response is a success or an error, this handler will be called. The programmer is responsible to manage the response status.
 
 All the handlers accept two arguments, the status and the response.
 
