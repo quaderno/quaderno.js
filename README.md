@@ -285,10 +285,6 @@ function quadernoErrorHandler(status, response) {
 
 Take a look at the [full example](example.html) form to see everything put together.
 
-## Pricing
-
-Quaderno.js charges 1% on top of Stripe's fees.
-
 ## License
 
 The MIT License (MIT)
