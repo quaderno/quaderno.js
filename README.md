@@ -150,10 +150,10 @@ In order to calculate the right tax for your customer and create correct contact
       <div class="form-row">
         <label>
           <span>* Expiration (MM/YYYY)</span>
-          <input type="text" size="2" data-stripe="exp-month"/>
+          <input type="text" size="2" data-stripe="exp_month"/>
         </label>
         <span> / </span>
-        <input type="text" size="4" data-stripe="exp-year"/>
+        <input type="text" size="4" data-stripe="exp_year"/>
       </div>
     </fieldset>
         
