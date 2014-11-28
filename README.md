@@ -48,7 +48,7 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form. A complete Quaderno with Stripe form would look like this:
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form - these fields will also have `data-stripe`  attributes. A complete Quaderno with Stripe form would look like the example below.  **Note**: the fields added by the quaderno API use `_` to seperate words in `stripe-data` attributes, whereas stripe's original fields use `-`. Follow the example below.
 
 ```
 <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
