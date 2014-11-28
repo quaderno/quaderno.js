@@ -48,7 +48,7 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form - these fields will also have `data-stripe`  attributes. A complete Quaderno with Stripe form would look like the example below.  **Note**: the fields added by the quaderno API use `_` to seperate words in `stripe-data` attributes, whereas stripe's original fields use `-`. Follow the example below.
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form - these fields will also have `data-stripe`  attributes. A complete Quaderno with Stripe form would look like the example below.
 
 ```
 <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
@@ -60,14 +60,14 @@ In order to calculate the right tax for your customer and create correct contact
       <div class="form-row">
         <label>
           <span>* First Name / Company Name</span>
-          <input data-stripe="first_name"/>
+          <input data-stripe="first-name"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Last Name</span>
-          <input data-stripe="last_name"/>
+          <input data-stripe="last-name"/>
         </label>
       </div>
 
@@ -81,14 +81,14 @@ In order to calculate the right tax for your customer and create correct contact
       <div class="form-row">
         <label>
           <span>Street Line 1</span>
-          <input data-stripe="street_line_1"/>
+          <input data-stripe="street-line-1"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Street Line 2</span>
-          <input data-stripe="street_line_2"/>
+          <input data-stripe="street-line-2"/>
         </label>
       </div>
 
@@ -102,7 +102,7 @@ In order to calculate the right tax for your customer and create correct contact
       <div class="form-row">
         <label>
           <span>Postal Code</span>        
-          <input data-stripe="postal_code"/>
+          <input data-stripe="postal-code"/>
         </label>
       </div>
 
@@ -125,7 +125,7 @@ In order to calculate the right tax for your customer and create correct contact
       <div class="form-row">
         <label>
           <span>Tax ID</span>
-          <input data-stripe="tax_id"/>
+          <input data-stripe="tax-id"/>
         </label>
       </div>
     </fieldset>
@@ -229,7 +229,7 @@ function stripeResponseHandler(status, response) {
     var token = response.id;
 
     // Insert the token into the form so it gets submitted to the server
-    $form.append($('<input type="hidden" data-stripe="card_token name="stripeToken" />').val(token));
+    $form.append($('<input type="hidden" data-stripe="stripeToken" />').val(token));
     Quaderno.createSubscription({
       success: quadernoSuccessHandler(status, response), 
       error: quadernoErrorHandler(status, response)
@@ -238,7 +238,7 @@ function stripeResponseHandler(status, response) {
 };
 ```
 
-Please note it is **mandatory** to create the input with the data-stripe="card_token" to make things work properly.
+Please note it is **mandatory** to create the input with the data-stripe="stripeToken" to make things work properly.
 
 After retrieving the card token, now we are ready to create the subscription via Quaderno. The important call is the **Quaderno.createSubscription**.
 
