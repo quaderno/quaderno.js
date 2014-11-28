@@ -163,7 +163,7 @@ A complete Quaderno with Stripe form would look like the example below:
 </form>
 ```
 
-And that's it! By adding the QuadernoStripe.js library it will initialize the Stripe library for you. If you want, you can add a name to those extra field to submit them to your server.
+And that's it! If you want, you can add a name to those extra field to submit them to your server.
 
 ###Step 2: Create a single use token
 
