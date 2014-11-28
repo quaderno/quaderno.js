@@ -1,20 +1,20 @@
 #Quaderno.js
 
-A general purpose library to create Stripe subscriptions, calculate taxes on the fly, and send beautiful invoices.
+A library to create Stripe subscriptions, calculate taxes on the fly, and send beautiful invoices.
 
 ##Installing the Quaderno.js library
 
-This tutorial helps you to integrate Quaderno.js in your app in order to create subscriptions with taxes (if needed).
+This tutorial helps you to integrate quaderno.js in your app in order to create subscriptions with taxes (if needed).
 
-At a high level, here's what you'll accomplish in this tutorial:
+Here's what you'll accomplish in this tutorial:
 
 1. Set the form and collect credit card information with Stripe.js
 2. Convert those details to what Stripe call a single-use token
 3. Create the Stripe subscription via Quaderno and send the data to your server
 
-###Step 1: Setting the form basics and collecting credit card information
+###Step 1: Setting up the form and collecting credit card information
 
-First, include Stripe.js and Quaderno.js in the page:
+First, include stripe.js and quaderno.js in the page:
 
 ```
 <script src="https://js.stripe.com/v2/"></script>
@@ -25,14 +25,14 @@ To prevent problems with some older browsers, we recommend putting the script ta
 
 You must add some extra data to your classic Stripe form:
 
-* **key:** (Mandatory) your Stripe publishable key.
+* **key:** (Mandatory) the Stripe publishable key for Quaderno. **Note** This is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in buy logging into Quaderno and clicking **Settings > Stripe** 
 * **plan:** (Mandatory) the plan id.
 * **taxes:** (Optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
 * **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations.
   
 ```
 <form action="" method="POST" id="payment-form" 
-  data-key="YOUR_PUBLISHABLE_KEY" 
+  data-key="YOUR_PUBLISHABLE_KEY_FOR_QUADERNO" 
   data-plan="YOUR_PLAN_ID" 
   data-taxes="excluded" 
   data-amount="900">
@@ -48,7 +48,9 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it is also necessary to send a little bit more data than in a regular Stripe form - these fields will also have `data-stripe`  attributes. A complete Quaderno with Stripe form would look like the example below.
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inouts, the extra inputs also have a `data-stripe` attribute. It is mandatory to include this attribute in at least the **first name** input to prevent unexpected results. By not including it in the **last name**, **country**, **postal code** or **tax id** will result in not exact taxes calculations due to lack of information. 
+
+A complete Quaderno with Stripe form would look like the example below:
 
 ```
 <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
@@ -161,8 +163,6 @@ In order to calculate the right tax for your customer and create correct contact
 </form>
 ```
 
-Notice that the inputs also has the data-stripe attribute. It is mandatory to include this attribute in at least the **first name** input to prevent unexpected results. By not including it in the **last name**, **country**, **postal code** or **tax id** will result in not exact taxes calculations due to lack of information. 
-
 And that's it! By adding the QuadernoStripe.js library it will initialize the Stripe library for you. If you want, you can add a name to those extra field to submit them to your server.
 
 ###Step 2: Create a single use token
@@ -170,7 +170,7 @@ And that's it! By adding the QuadernoStripe.js library it will initialize the St
 Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separated script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token. 
 
 ```
-<script type="text/javascript">
+<script>
   jQuery(function($) {
     $('#payment-form').submit(function(event) {
       var $form = $(this);
@@ -197,13 +197,13 @@ The second argument **stripeResponseHandler** is a callback that handles the res
 
 ```
 {  
-  id: "tok_u5dg20Gra", // String of token identifier,  
-  card: {...}, // Dictionary of the card used to create the token  
-  created: 1414143837, // Integer of date token was created  
-  currency: "usd", // String currency that the token was created in  
-  livemode: true, // Boolean of whether this token was created with a live or test API key  
-  object: "token", // String identifier of the type of object, always "token"  
-  used: false // Boolean of whether this token has been used  
+  id: "tok_u5dg20Gra", // String, token identifier,  
+  card: {...}, // Object, the card used to create the token  
+  created: 1414143837, // Number, date token was created  
+  currency: "usd", // String, currency that the token was created in  
+  livemode: true, // Boolean, whether this token was created with a live or test API key  
+  object: "token", // String, identifier of the type of object, always "token"  
+  used: false // Boolean, whether this token has been used  
 }  
 ```
 
@@ -246,7 +246,7 @@ After retrieving the card token, now we are ready to create the subscription via
 
 * success: If Quaderno manages to create the subscription with no errors at all.
 * error: If any error prevents from creating the subscription, this handler will be called.
-* complete: Wether if the response is a success or an error, this handler will be called. The programmer is responsible to manage the response status.
+* complete: Whether the response is a success or an error, this handler will be called. The programmer is responsible to manage the response status.
 
 All the handlers accept two arguments, the status and the response.
 
