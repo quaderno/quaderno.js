@@ -30,7 +30,7 @@ You must add some extra data to your classic Stripe form:
 * **taxes:** (Optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
 * **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations.
   
-```
+```html
 <form action="" method="POST" id="payment-form" 
   data-key="YOUR_PUBLISHABLE_KEY_FOR_QUADERNO" 
   data-plan="YOUR_PLAN_ID" 
@@ -42,7 +42,7 @@ You must add some extra data to your classic Stripe form:
 
 If you add the `amount` data and want to show live previews to the customer, you can add the classes `quaderno-subtotal`, `quaderno-taxes`, and `quaderno-total` to any DOM element to modify its inner HTML. For example:
 
-```
+```html
 $<span class="quaderno-subtotal"></span>
 $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
@@ -52,7 +52,7 @@ In order to calculate the right tax for your customer and create correct contact
 
 A complete Quaderno with Stripe form would look like the example below:
 
-```
+```html
 <form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
     <span class="payment-errors"></span>
 
@@ -169,7 +169,7 @@ And that's it! If you want, you can add a name to those extra field to submit th
 
 Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separated script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token. 
 
-```
+```html
 <script>
   jQuery(function($) {
     $('#payment-form').submit(function(event) {
@@ -195,7 +195,7 @@ The second argument **stripeResponseHandler** is a callback that handles the res
 * status is one of the status codes described in the [Stripe API docs](https://stripe.com/docs/api#errors).
 * response is an Object with these properties:
 
-```
+```js
 {  
   id: "tok_u5dg20Gra", // String, token identifier,  
   card: {...}, // Object, the card used to create the token  
@@ -216,7 +216,7 @@ After retrieving the response from ** Stripe.card.createToken** in  **stripeResp
 
 The code would be:
 
-```
+```js
 function stripeResponseHandler(status, response) {
   var $form = $('#payment-form');
 
@@ -253,7 +253,7 @@ All the handlers accept two arguments, the status and the response.
 * status: The code of the request (200, 201, 401, etc.).
 * response: Contains a Javascript object with the following structure:
 
-```
+```js
 {
   message: 'The message of the response as a string.',
   customer: 'The id of the created customer in Quaderno (only present if the response was a success).'
@@ -262,7 +262,7 @@ All the handlers accept two arguments, the status and the response.
 
 * The success handler code would be something like this:
 
-```
+```js
 function quadernoSuccessHandler(status, response) {
   $form = $('#payment-form');
   $form.append($('<input type="hidden" name="customerId" />').val(response.customer);
@@ -272,7 +272,7 @@ function quadernoSuccessHandler(status, response) {
 
 * The error handler code would be like this: 
 
-```
+```js
 function quadernoErrorHandler(status, response) {
   $form = $('#payment-form');
   $form.find('button').prop('disabled', false);
