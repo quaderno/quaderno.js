@@ -8,7 +8,7 @@ This tutorial helps you to integrate quaderno.js in your app in order to create 
 
 Here's what you'll accomplish in this tutorial:
 
-1. Set the form and collect credit card information with Stripe.js
+1. Set up the form and collect credit card information with Stripe.js
 2. Convert those details to what Stripe call a single-use token
 3. Create the Stripe subscription via Quaderno and send the data to your server
 
@@ -25,10 +25,10 @@ To prevent problems with some older browsers, we recommend putting the script ta
 
 You must add some extra data to your classic Stripe form:
 
-* **key:** (Mandatory) the Stripe publishable key for Quaderno. **Note** This is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in buy logging into Quaderno and clicking **Settings > Stripe** 
-* **plan:** (Mandatory) the plan id.
-* **taxes:** (Optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
-* **amount:** (Optional) the amount of the plan in cents. It is only used to inform the customer with live taxes calculations.
+* **key:** (mandatory) the Stripe publishable key for Quaderno. **Note**: this is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in buy logging into Quaderno and clicking **Settings > Stripe** 
+* **plan:** (mandatory) the plan id. 
+* **taxes:** (optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
+* **amount:** (optional) the amount of the plan in cents. This is only used to show customers live tax calculations.
   
 ```html
 <form action="" method="POST" id="payment-form" 
@@ -40,7 +40,7 @@ You must add some extra data to your classic Stripe form:
 </form>
 ```
 
-If you add the `amount` data and want to show live previews to the customer, you can add the classes `quaderno-subtotal`, `quaderno-taxes`, and `quaderno-total` to any DOM element to modify its inner HTML. For example:
+If you add the `amount` data and want to show live tax previews to the customer, you can add the classes `quaderno-subtotal`, `quaderno-taxes`, and `quaderno-total` to any DOM element to modify its inner HTML. For example:
 
 ```html
 $<span class="quaderno-subtotal"></span>
@@ -48,7 +48,7 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inouts, the extra inputs also have a `data-stripe` attribute. It is mandatory to include this attribute in at least the **first name** input to prevent unexpected results. By not including it in the **last name**, **country**, **postal code** or **tax id** will result in not exact taxes calculations due to lack of information. 
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inputs, the extra inputs also have a `data-stripe` attribute. It is mandatory to include the data-stripe attribute in at least the **first name** input to prevent unexpected results. Including the data-stripe attribute in the **last name**, **country**, **postal code** or **tax id** is necessary for exact tax calculation. 
 
 A complete Quaderno with Stripe form would look like the example below:
 
@@ -167,7 +167,7 @@ And that's it! If you want, you can add a name to those extra field to submit th
 
 ###Step 2: Create a single use token
 
-Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separated script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token. 
+Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separate script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token. 
 
 ```html
 <script>
