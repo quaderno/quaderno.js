@@ -130,6 +130,13 @@ A complete Quaderno with Stripe form would look like the example below:
           <input data-stripe="tax-id"/>
         </label>
       </div>
+
+      <div class="form-row">
+        <label>
+          <span>Coupon</span>
+          <input data-stripe="coupon"/>
+        </label>
+      </div>
     </fieldset>
       
     <!-- Stripe form fields -->
