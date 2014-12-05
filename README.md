@@ -48,7 +48,7 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inputs, the extra inputs also have a `data-stripe` attribute. It is mandatory to include the data-stripe attribute in at least the **first name** input to prevent unexpected results. Including the data-stripe attribute in the **last name**, **country**, **postal code** or **tax id** is necessary for exact tax calculation. 
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inputs, the extra inputs also have a `data-stripe` attribute. It is mandatory to include the data-stripe attribute in at least the **first name** input to prevent unexpected results. Including the data-stripe attribute in the **last name**, **country**, **postal code** or **VAT number** is necessary for exact tax calculation. 
 
 A complete Quaderno with Stripe form would look like the example below:
 
@@ -126,8 +126,8 @@ A complete Quaderno with Stripe form would look like the example below:
 
       <div class="form-row">
         <label>
-          <span>Tax ID</span>
-          <input data-stripe="tax-id"/>
+          <span>VAT Number</span>
+          <input data-stripe="vat-number"/>
         </label>
       </div>
 
