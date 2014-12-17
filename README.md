@@ -18,7 +18,7 @@ First, include stripe.js and quaderno.js in the page:
 
 ```
 <script src="https://js.stripe.com/v2/"></script>
-<script src="http://js.quaderno.io/v1/"></script>
+<script src="https://js.quaderno.io/v1/"></script>
 ```
 
 To prevent problems with some older browsers, we recommend putting the script tag in the `<head>` tag of your page, or as a direct descendant of the `<body>` at the end of your page.
