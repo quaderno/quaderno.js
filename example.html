@@ -421,7 +421,7 @@
             success: function(status, response){ 
               // response contains the message and the Stripe customer id
               var customer_id = response.customer
-              $form.append($('<input type="hidden" data-stripe="customerID" />').val(customer_id));
+              $form.append($('<input type="hidden" name="customerId" data-stripe="customerID" />').val(customer_id));
               // and re-submit the form              
               $form.get(0).submit(); 
             },
