@@ -275,7 +275,7 @@ All the handlers accept two arguments, the status and the response.
 ```js
 function quadernoSuccessHandler(status, response) {
   $form = $('#payment-form');
-  $form.append($('<input type="hidden" name="customerId" />').val(response.customer);
+  $form.append($('<input type="hidden" name="customerId" data-stripe="customerID" />').val(response.customer);
   $form.get(0).submit();
 }
 ```
