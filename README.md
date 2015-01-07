@@ -295,6 +295,55 @@ function quadernoErrorHandler(status, response) {
 
 Take a look at the [full example](example.html) form to see everything put together.
 
+## Advanced usage
+
+### Programatically init Quaderno
+
+By default, if you include the identifier `payment-form` like in the [example](example.html), Quaderno automatically will associate the necessary callbacks to your form. Nevertheless if the form is not present in the DOM when the page is loaded or if you want to use a different selector you can do it by calling:
+
+```javascript
+Quaderno.init('#custom-form-selector')
+```
+
+### Calculate taxes on demand
+
+By default, in order to refresh the taxes calculations when the form is modified, Quaderno will associate the event `change` handler on the inputs with the following values for `data-stripe` (if present) : 
+
+* `company-name`
+* `country`
+* `postal-code`
+* `vat-number`
+* `quantity`
+
+If you want to force a taxes calculation or associate your custom events to a taxes calculation, you can do it like this:
+
+```javascript
+  Quaderno.calculateTaxes(callbacks)
+```
+
+Because this is an asynchronous ajax function, if you want to execute something only when the taxes are calculated, we provide the `callbacks` argument, which is an optional JS object which could contain three types of callbacks:
+
+* success: Executed if the taxes calculation was a success.
+* error: Executed if the taxes calculations failed (not valid stripe publishable key, for example) .
+* complete: Executed no matter if the response was a success or an error.
+
+All the above callbacks accept two arguments, the status code and the response. For example:
+
+```javascript
+  Quaderno.calculateTaxes({ success: function(statusCode, response) { alert(statusCode); } }); // => Show a 200 in the alert
+```
+
+### Read last calculated tax
+
+If you just want to check the values of the last calculated tax, you can always call do:
+
+```javascript
+Quaderno.readQuadernoTaxes(); // => Object {name: "IVA", rate: 22, notes: null}
+Quaderno.readQuadernoTaxes().name; // => "IVA"
+Quaderno.readQuadernoTaxes().rate; // => 22
+…
+```
+
 ## License
 
 The MIT License (MIT)
