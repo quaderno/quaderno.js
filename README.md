@@ -1,6 +1,6 @@
 #Quaderno.js
 
-A library to create Stripe subscriptions, calculate taxes on the fly, and send beautiful invoices.
+A library to create Stripe subscriptions and charges, calculate taxes on the fly, and send beautiful invoices.
 
 ##Installing the Quaderno.js library
 
@@ -25,16 +25,16 @@ To prevent problems with some older browsers, we recommend putting the script ta
 
 You must add some extra data to your classic Stripe form:
 
-* **key:** (mandatory) the Stripe publishable key for Quaderno. **Note**: this is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in buy logging into Quaderno and clicking **Settings > Stripe** 
-* **plan:** (mandatory) the plan id. 
+* **key:** (mandatory) the Stripe publishable key for Quaderno. **Note**: this is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in buy logging into Quaderno and clicking **Settings > Stripe**
+* **plan:** (mandatory) the plan id.
 * **taxes:** (optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
 * **amount:** (optional) the amount of the plan in cents. This is only used to show customers live tax calculations.
-  
+
 ```html
-<form action="" method="POST" id="payment-form" 
-  data-key="YOUR_PUBLISHABLE_KEY_FOR_QUADERNO" 
-  data-plan="YOUR_PLAN_ID" 
-  data-taxes="excluded" 
+<form action="" method="POST" id="payment-form"
+  data-key="YOUR_PUBLISHABLE_KEY_FOR_QUADERNO"
+  data-plan="YOUR_PLAN_ID"
+  data-taxes="excluded"
   data-amount="900">
   ...
 </form>
@@ -48,7 +48,7 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inputs, the extra inputs also have a `data-stripe` attribute. It is mandatory to include the data-stripe attribute in at least the **first name** input to prevent unexpected results. Including the data-stripe attribute in the **last name**, **country**, **postal code** or **VAT number** is necessary for exact tax calculation. 
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inputs, the extra inputs also have a `data-stripe` attribute. It is mandatory to include the data-stripe attribute in at least the **first name** input to prevent unexpected results. Including the data-stripe attribute in the **last name**, **country**, **postal code** or **VAT number** is necessary for exact tax calculation.
 Also, if necessary, you can specify the per-user pricing by setting an optional input with the data-stripe **quantity**. By default it is 1.
 
 A complete Quaderno with Stripe form would look like the example below:
@@ -76,7 +76,7 @@ A complete Quaderno with Stripe form would look like the example below:
 
       <div class="form-row">
         <label>
-          <span>Email</span> 
+          <span>Email</span>
           <input data-stripe="email"/>
         </label>
       </div>
@@ -104,7 +104,7 @@ A complete Quaderno with Stripe form would look like the example below:
 
       <div class="form-row">
         <label>
-          <span>Postal Code</span>        
+          <span>Postal Code</span>
           <input data-stripe="postal-code"/>
         </label>
       </div>
@@ -139,7 +139,7 @@ A complete Quaderno with Stripe form would look like the example below:
         </label>
       </div>
     </fieldset>
-      
+
     <!-- Stripe form fields -->
     <fieldset>
       <legend>Credit Card Data</legend>
@@ -166,7 +166,7 @@ A complete Quaderno with Stripe form would look like the example below:
         <input type="text" size="4" data-stripe="exp-year"/>
       </div>
     </fieldset>
-    
+
     <input type="hidden" data-stripe="quantity" value=1 />
 
     <button type="submit">Submit Payment</button>
@@ -177,7 +177,7 @@ And that's it! If you want, you can add a name to those extra field to submit th
 
 ###Step 2: Create a single use token
 
-Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separate script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token. 
+Next, we will want to create a single-use token that can be used to represent the credit card information your customer enters. Note that you should not store or attempt to reuse single-use tokens. After the code we just added, in a separate script tag, we'll add an event handler to our form. We want to capture the **submit** event, and then use the credit card information to create a single-use token.
 
 ```html
 <script>
@@ -206,15 +206,15 @@ The second argument **stripeResponseHandler** is a callback that handles the res
 * response is an Object with these properties:
 
 ```js
-{  
-  id: "tok_u5dg20Gra", // String, token identifier,  
-  card: {...}, // Object, the card used to create the token  
-  created: 1414143837, // Number, date token was created  
-  currency: "usd", // String, currency that the token was created in  
-  livemode: true, // Boolean, whether this token was created with a live or test API key  
-  object: "token", // String, identifier of the type of object, always "token"  
-  used: false // Boolean, whether this token has been used  
-}  
+{
+  id: "tok_u5dg20Gra", // String, token identifier,
+  card: {...}, // Object, the card used to create the token
+  created: 1414143837, // Number, date token was created
+  currency: "usd", // String, currency that the token was created in
+  livemode: true, // Boolean, whether this token was created with a live or test API key
+  object: "token", // String, identifier of the type of object, always "token"
+  used: false // Boolean, whether this token has been used
+}
 ```
 
 ###Step 3: Create the Stripe subscription via Quaderno and send the data to the server
@@ -241,7 +241,7 @@ function stripeResponseHandler(status, response) {
     // Insert the token into the form so it gets submitted to the server
     $form.append($('<input type="hidden" data-stripe="stripeToken" />').val(token));
     Quaderno.createSubscription({
-      success: quadernoSuccessHandler(status, response), 
+      success: quadernoSuccessHandler(status, response),
       error: quadernoErrorHandler(status, response)
     });
   }
@@ -280,7 +280,7 @@ function quadernoSuccessHandler(status, response) {
 }
 ```
 
-* The error handler code would be like this: 
+* The error handler code would be like this:
 
 ```js
 function quadernoErrorHandler(status, response) {
@@ -295,6 +295,67 @@ function quadernoErrorHandler(status, response) {
 
 Take a look at the [full example](example.html) form to see everything put together.
 
+
+### Creating single charges
+
+Creating single charges is very similar to creating subscriptions, but in order to prevent fraud some calculations must be made in your backend prior rendering the payment form.
+
+Before showing the payment form to your customer, you must encode a JSON Web Token (JWT) with your stripe access token/api token (not your stripe publishable key). This JWT should contain, as minimum data, the amount of the charge in cents (the taxable base) and a timestamp called `iat` which defines the seconds since the UNIX epoch. For example:
+
+```json
+{
+  "amount":1000,
+  "iat":1421753188
+}
+```
+
+Then codify it as a JWT. An example with ruby and the  `jwt` gem:
+
+```ruby
+jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_STRIPE_ACCESS_TOKEN')
+
+puts jwt #=> Will show "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4" 
+```
+
+Once you have generated the JWT, you can render the payment form, which should be very similar to the one used for the subscriptions example, but instead adding the `data-plan`, now you should add the `data-charge_data` with the jwt as the value.
+
+```html
+<form action="" method="POST" id="payment-form"
+  data-key="YOUR_PUBLISHABLE_KEY_FOR_QUADERNO"
+  data-charge_data="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4"
+  data-taxes="excluded"
+  data-amount="900">
+  ...
+</form>
+```
+
+And instead calling the `Quaderno.createSubscription` method you should call `Quaderno.createCharge` , which accepts the same arguments as the `createSubscription`.
+
+```js
+function stripeResponseHandler(status, response) {
+  var $form = $('#payment-form');
+
+  if (response.error) {
+    // Show the errors on the form
+    $form.find('.payment-errors').text(response.error.message);
+    $form.find('button').prop('disabled', false);
+  } else {
+    // response contains id and card, which contains additional card details
+    var token = response.id;
+
+    // Insert the token into the form so it gets submitted to the server
+    $form.append($('<input type="hidden" data-stripe="stripeToken" />').val(token));
+    Quaderno.createCharge({
+      success: quadernoSuccessHandler(status, response),
+      error: quadernoErrorHandler(status, response)
+    });
+  }
+};
+```
+
+
+You can see a full example of single charges creation [here](charges_example.html).
+
 ## Advanced usage
 
 ### Programatically init Quaderno
@@ -307,7 +368,7 @@ Quaderno.init('#custom-form-selector')
 
 ### Calculate taxes on demand
 
-By default, in order to refresh the taxes calculations when the form is modified, Quaderno will associate the event `change` handler on the inputs with the following values for `data-stripe` (if present) : 
+By default, in order to refresh the taxes calculations when the form is modified, Quaderno will associate the event `change` handler on the inputs with the following values for `data-stripe` (if present) :
 
 * `company-name`
 * `country`
