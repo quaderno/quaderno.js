@@ -15,17 +15,17 @@
   </head>
   <body>
     <h1>Create a subscription to Awesome Plan with Stripe</h1>
-    
+
     <p>Subtotal: $<span class="quaderno-subtotal"></span></p>
     <p>Taxes: $<span class="quaderno-taxes"></span></p>
     <p>Total: $<span class="quaderno-total"></span></p>
 
-    <form method="POST" id="payment-form" 
+    <form method="POST" id="payment-form"
       data-key="YOUR_PUBLISHABLE_KEY"
-      data-plan="YOUR_PLAN_ID" 
-      data-amount="1200" 
+      data-plan="YOUR_PLAN_ID"
+      data-amount="1200"
       data-taxes="excluded">
-      
+
       <span class="payment-errors"></span>
 
       <fieldset>
@@ -46,7 +46,7 @@
 
         <div class="form-row">
           <label>
-            <span>Email</span> 
+            <span>Email</span>
             <input data-stripe="email"/>
           </label>
         </div>
@@ -74,7 +74,7 @@
 
         <div class="form-row">
           <label>
-            <span>Postal Code</span>        
+            <span>Postal Code</span>
             <input data-stripe="postal-code"/>
           </label>
         </div>
@@ -366,7 +366,7 @@
           </label>
         </div>
       </fieldset>
-      
+
       <fieldset>
         <legend>Credit Card Data</legend>
         <div class="form-row">
@@ -397,7 +397,7 @@
 
       <button type="submit">Submit Payment</button>
     </form>
-    
+
     <script type="text/javascript">
     // This identifies your website in the createToken call below
       Stripe.setPublishableKey(document.querySelector("#payment-form").dataset.key);
@@ -412,41 +412,41 @@
         } else {
           // token contains id, last4, and card type
           var token = response.id;
-          
+
           // Insert the token into the form so it gets submitted to the server
           $form.append($('<input type="hidden" data-stripe="stripeToken" />').val(token));
-          
+
           // create the charge in Stripe via Quaderno and submit
           Quaderno.createSubscription({
-            success: function(status, response){ 
+            success: function(status, response){
               // response contains the message and the Stripe customer id
               var customer_id = response.customer
               $form.append($('<input type="hidden" name="customerId" data-stripe="customerID" />').val(customer_id));
-              // and re-submit the form              
-              $form.get(0).submit(); 
+              // and re-submit the form
+              $form.get(0).submit();
             },
-            error: function(status, response){ 
-              $form.find('.payment-errors').text(response.message); 
+            error: function(status, response){
+              $form.find('.payment-errors').text(response.message);
               $form.find('button').prop('disabled', false);
             }
           });
-              
+
         }
       };
 
       jQuery(function($) {
         $('#payment-form').submit(function(e) {
           var $form = $(this);
-          
+
           // Disable the submit button to prevent repeated clicks
           $form.find('button').prop('disabled', true);
-          
+
           Stripe.card.createToken($form, stripeResponseHandler);
-          
+
           // Prevent the form from submitting with the default action
           return false;
         });
       });
-    </script>  
+    </script>
   </body>
 </html>
