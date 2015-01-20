@@ -321,7 +321,7 @@ jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_STRIPE_ACCESS_TOKEN'
 puts jwt #=> Will show "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4" 
 ```
 
-Once you have generated the JWT, you can render the payment form, which should be very similar to the one used for the subscriptions example, but instead adding the `data-plan`, now you should add the `data-charge_data` with the jwt as the value.
+Once you have generated the JWT, you can render the payment form, which should be very similar to the one used for the subscriptions example, but instead adding the `data-plan`, now you should add the `data-charge` with the jwt as the value.
 
 ```html
 <form action="" method="POST" id="payment-form"
