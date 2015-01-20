@@ -300,7 +300,7 @@ Take a look at the [full example](subscriptions_example.html) form to see everyt
 
 Creating single charges is very similar to creating subscriptions, but in order to prevent fraud some calculations must be made in your backend prior rendering the payment form.
 
-Before showing the payment form to your customer, you must encode a JSON Web Token (JWT) with your Stripe access token/api token (not your stripe publishable key). This JWT should contain, as minimum data, the amount of the charge in cents and a timestamp called `iat` which defines the seconds since the UNIX epoch. For example:
+Before showing the payment form to your customer, you must encode a [JSON Web Token](http://jwt.io/) (JWT) with your Stripe access token/API token (**not** your Stripe publishable key). You can find the Stripe Access Token under **Settings > Stripe** in Quaderno. This JWT should contain, as minimum data, the amount of the charge in cents and an issuedAt timestamp (called `iat` for short) which defines the seconds since the UNIX epoch. For example:
 
 ```json
 {
@@ -321,7 +321,7 @@ jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_STRIPE_ACCESS_TOKEN'
 puts jwt #=> Will show "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4" 
 ```
 
-Once you have generated the JWT, you can render the payment form, which should be very similar to the one used for the subscriptions example, but instead adding the `data-plan`, now you should add the `data-charge` with the jwt as the value.
+Once you have generated the JWT, you can render the payment form, which should be very similar to the one used for the subscriptions example, but instead adding the `data-plan`, now you should add the `data-charge` with the JWT as the value.
 
 ```html
 <form action="" method="POST" id="payment-form"
@@ -333,7 +333,7 @@ Once you have generated the JWT, you can render the payment form, which should b
 </form>
 ```
 
-And instead calling the `Quaderno.createSubscription` method you should call `Quaderno.createCharge` , which accepts the same arguments as the `createSubscription`.
+And instead calling the `Quaderno.createSubscription` method you should call `Quaderno.createCharge`, which accepts the same arguments as the `createSubscription`.
 
 ```js
 function stripeResponseHandler(status, response) {
