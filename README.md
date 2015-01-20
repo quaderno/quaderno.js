@@ -293,14 +293,14 @@ function quadernoErrorHandler(status, response) {
 * If the success handler is called, it will create an input with the customer id and will send the form to your server.
 * If the error handler is called it will show the error and reactivate the button
 
-Take a look at the [full example](example.html) form to see everything put together.
+Take a look at the [full example](subscriptions_example.html) form to see everything put together.
 
 
 ### Creating single charges
 
 Creating single charges is very similar to creating subscriptions, but in order to prevent fraud some calculations must be made in your backend prior rendering the payment form.
 
-Before showing the payment form to your customer, you must encode a JSON Web Token (JWT) with your stripe access token/api token (not your stripe publishable key). This JWT should contain, as minimum data, the amount of the charge in cents (the taxable base) and a timestamp called `iat` which defines the seconds since the UNIX epoch. For example:
+Before showing the payment form to your customer, you must encode a JSON Web Token (JWT) with your Stripe access token/api token (not your stripe publishable key). This JWT should contain, as minimum data, the amount of the charge in cents and a timestamp called `iat` which defines the seconds since the UNIX epoch. For example:
 
 ```json
 {
@@ -309,7 +309,11 @@ Before showing the payment form to your customer, you must encode a JSON Web Tok
 }
 ```
 
-Then codify it as a JWT. An example with ruby and the  `jwt` gem:
+* **amount:** (mandatory) amount of the transaction. Quaderno will handle the taxes when creating the charge.
+* **iat** (mandatory) necessary to prevent the reuse of the generated JWT. Quaderno will give a 10 minutes window for the generated JWT, so that's pretty much the time that your customer has to fill the form and make the payment.
+* **currency** (optional) if not set, the charge will be made using the currency set in your Quaderno account
+
+Then codify it as a JWT with your Stripe access token. An example with ruby and the  `jwt` gem:
 
 ```ruby
 jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_STRIPE_ACCESS_TOKEN')
