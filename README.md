@@ -326,7 +326,7 @@ Once you have generated the JWT, you can render the payment form, which should b
 ```html
 <form action="" method="POST" id="payment-form"
   data-key="YOUR_PUBLISHABLE_KEY_FOR_QUADERNO"
-  data-charge_data="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4"
+  data-charge="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4"
   data-taxes="excluded"
   data-amount="900">
   ...
