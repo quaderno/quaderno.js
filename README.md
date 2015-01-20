@@ -300,7 +300,7 @@ Take a look at the [full example](subscriptions_example.html) form to see everyt
 
 Creating single charges is very similar to creating subscriptions, but in order to prevent fraud some calculations must be made in your backend prior rendering the payment form.
 
-Before showing the payment form to your customer, you must encode a [JSON Web Token](http://jwt.io/) (JWT) with your Stripe access token/API token (**not** your Stripe publishable key). You can find the Stripe Access Token under **Settings > Stripe** in Quaderno. This JWT should contain, as minimum data, the amount of the charge in cents and an issuedAt timestamp (called `iat` for short) which defines the seconds since the UNIX epoch. For example:
+Before showing the payment form to your customer, you must encode a [JSON Web Token](http://jwt.io/) (JWT) with your Stripe secret key for Quaderno (**not** your Stripe publishable key). You can find the secret key under **Settings > Stripe** in Quaderno. This JWT should contain, as minimum data, the amount of the charge in cents and an issuedAt timestamp (called `iat` for short) which defines the seconds since the UNIX epoch. For example:
 
 ```json
 {
@@ -413,7 +413,7 @@ Quaderno.readQuadernoTaxes().rate; // => 22
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Quaderno
+Copyright (c) 2014-2015 Quaderno
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
