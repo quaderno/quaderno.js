@@ -313,13 +313,15 @@ Before showing the payment form to your customer, you must encode a [JSON Web To
 * **iat** (mandatory) necessary to prevent the reuse of the generated JWT. Quaderno will give a 10 minutes window for the generated JWT, so that's pretty much the time that your customer has to fill the form and make the payment.
 * **currency** (optional) if not set, the charge will be made using the currency set in your Quaderno account
 
-Then codify it as a JWT with your Stripe access token. An example with ruby and the  `jwt` gem:
+Then codify it as a JWT with your Stripe access token. An example with ruby and the  `jwt` gem (https://github.com/progrium/ruby-jwt):
 
 ```ruby
 jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_STRIPE_ACCESS_TOKEN')
 
 puts jwt #=> Will show "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4" 
 ```
+
+If you are working with **node.js**, **[@mikemaccana](https://github.com/mikemaccana)** has made a nice plugin to get the necessary JWT in a much easier way. You can read more about it [here](https://www.npmjs.com/package/quaderno-server).
 
 Once you have generated the JWT, you can render the payment form, which should be very similar to the one used for the subscriptions example, but instead adding the `data-plan`, now you should add the `data-charge` with the JWT as the value.
 
