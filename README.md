@@ -316,9 +316,9 @@ Before showing the payment form to your customer, you must encode a [JSON Web To
 Then codify it as a JWT with your Stripe access token. An example with ruby and the  `jwt` gem (https://github.com/progrium/ruby-jwt):
 
 ```ruby
-jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_STRIPE_ACCESS_TOKEN')
+jwt = JWT.encode('{"amount":1000, "iat":1421753188}', 'YOUR_SECRET_KEY_FOR_QUADERNO')
 
-puts jwt #=> Will show "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4" 
+puts jwt #=> "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IntcImFtb3VudFwiOjEwMDAsIFwiaWF0XCI6MTQyMTc1MzE4OH0i.da1E9xAQDoX6cDhNMkJuRkJPpeAOUMTBACsD--pr4w4" 
 ```
 
 If you are working with **node.js**, **[@mikemaccana](https://github.com/mikemaccana)** has made a nice plugin to get the necessary JWT in a much easier way. You can read more about it [here](https://www.npmjs.com/package/quaderno-server).
