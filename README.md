@@ -25,7 +25,7 @@ To prevent problems with some older browsers, we recommend putting the script ta
 
 You must add some extra data to your classic Stripe form:
 
-* **key:** (mandatory) the Stripe publishable key for Quaderno. **Note**: this is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in buy logging into Quaderno and clicking **Settings > Stripe**
+* **key:** (mandatory) the Stripe publishable key for Quaderno. **Note**: this is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in by logging into Quaderno and clicking **Settings > Stripe**
 * **plan:** (mandatory) the plan id.
 * **taxes:** (optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
 * **amount:** (optional) the amount of the plan in cents. This is only used to show customers live tax calculations.
