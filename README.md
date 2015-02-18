@@ -400,19 +400,19 @@ All the above callbacks accept two arguments, the status code and the response. 
   Quaderno.calculateTaxes({ success: function(statusCode, response) { alert(statusCode); } }); // => Show a 200 in the alert
 ```
 
-### Listen the "taxCalculated" event
+### Listen the "taxCalculated.Quaderno" event
 
-Whenever a tax is succesfully calculated, the event `taxCalculated` is dispatched on the payment form. It's useful if you want to bind some custom actions to the automatic taxes calculations made by Quaderno.js.
+Whenever a tax is succesfully calculated, the event `taxCalculated.Quaderno` is dispatched on the payment form. It's useful if you want to bind some custom actions to the automatic taxes calculations made by Quaderno.js.
 
 ```javascript
   // With plain JavaScript
-  document.getElementById("payment-form").addEventListener('taxCalculated', function(data){
+  document.getElementById("payment-form").addEventListener('taxCalculated.Quaderno', function(data){
     alert(data.detail.message) // "A tax has been calculated"
   })
 
   // With JQuery
-  $('#payment-form').on('taxCalculated', function(data){
-    alert(data.detail.message) // "A tax has been calculated"
+  $('#payment-form').on('taxCalculated.Quaderno', function(data){
+    alert(data.namespace + ": " + data.detail.message) // "Quaderno: A tax has been calculated"
   })
 ```
 
