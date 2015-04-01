@@ -391,7 +391,7 @@ Quaderno.init('#custom-form-selector')
 
 ### Calculate taxes on demand
 
-By default, in order to refresh the taxes calculations when the form is modified, Quaderno will associate the event `change` handler on the inputs with the following values for `data-stripe` (if present) :
+By default, in order to refresh the taxes calculations when the form is modified, Quaderno will associate the event `change` handler on the inputs with the following values for `data-quaderno` (if present) :
 
 * `company-name`
 * `country`
