@@ -327,7 +327,7 @@ Before showing the payment form to your customer, you must encode a [JSON Web To
 
 * **amount:** (mandatory) amount of the transaction. Quaderno will handle the taxes when creating the charge.
 * **iat** (mandatory) necessary to prevent the reuse of the generated JWT. Quaderno will give a 10 minutes window for the generated JWT, so that's pretty much the time that your customer has to fill the form and make the payment.
-* **currency** (optional) if not set, the charge will be made using the currency set in your Quaderno account
+* **currency** (optional) if not set, the charge will be made using 'USD'.
 * **po_number** (optional) a unique identifier of the order. You can use it to check if your order data meets the invoice generated in Quaderno.
 
 Then codify it as a JWT with your Stripe access token. An example with ruby and the  `jwt` gem (https://github.com/progrium/ruby-jwt):
