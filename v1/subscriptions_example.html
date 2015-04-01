@@ -5,12 +5,12 @@
     <title>Quaderno for Stripe Getting Started Form</title>
 
     <!-- The required Stripe lib -->
-    <script src="https://js.stripe.com/v2/"></script>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
     <!-- The required Quaderno lib -->
-    <script src="https://js.quaderno.io/v2/"></script>
+    <script type="text/javascript" src="https://js.quaderno.io/v1/"></script>
 
-    <!-- jQuery is used only for this example; it isn't required to use Quaderno.js -->
+    <!-- jQuery is used only for this example; it isn't required to use Stripe -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   </head>
   <body>
@@ -24,82 +24,72 @@
       data-key="YOUR_PUBLISHABLE_KEY"
       data-plan="YOUR_PLAN_ID"
       data-amount="1200"
-      data-taxes="excluded"
+      data-taxes="excluded">
 
       <span class="payment-errors"></span>
-
-
-      <input type="hidden" value="1" data-quaderno="quantity">
 
       <fieldset>
         <legend>Billing Address</legend>
         <div class="form-row">
           <label>
-            <span>* First Name</span>
-            <input data-quaderno="first-name"/>
+            <span>* First Name / Company Name</span>
+            <input data-stripe="first-name"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Last Name</span>
-            <input data-quaderno="last-name"/>
-          </label>
-        </div>
-
-        <div class="form-row">
-          <label>
-            <span>Company Name</span>
-            <input data-quaderno="company-name"/>
+            <input data-stripe="last-name"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Email</span>
-            <input data-quaderno="email"/>
+            <input data-stripe="email"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Street Line 1</span>
-            <input data-quaderno="street-line-1"/>
+            <input data-stripe="street-line-1"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Street Line 2</span>
-            <input data-quaderno="street-line-2"/>
+            <input data-stripe="street-line-2"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>City</span>
-            <input data-quaderno="city"/>
+            <input data-stripe="city"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Postal Code</span>
-            <input data-quaderno="postal-code"/>
+            <input data-stripe="postal-code"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Region</span>
-            <input data-quaderno="region"/>
+            <input data-stripe="region"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Country</span>
-            <select id="quaderno-countries" data-quaderno="country">
+            <select data-stripe="country">
               <option value="US" selected>United States</option>
               <option value="GB">United Kingdom</option>
               <option value="DE">Germany</option>
@@ -365,14 +355,14 @@
         <div class="form-row">
           <label>
             <span>VAT Number</span>
-            <input data-quaderno="vat-number"/>
+            <input data-stripe="vat-number"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Coupon</span>
-            <input data-quaderno="coupon"/>
+            <input data-stripe="coupon"/>
           </label>
         </div>
       </fieldset>
@@ -382,32 +372,35 @@
         <div class="form-row">
           <label>
             <span>* Card Number</span>
-            <input class="card-number" data-quaderno="number"/>
+            <input data-stripe="number"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>* CVC</span>
-            <input class="card-cvc" data-quaderno="cvc" type="password"/>
+            <input data-stripe="cvc" type="password"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>* Expiration (MM/YYYY)</span>
-            <input class="card-expiry-month" type="text" size="2" data-quaderno="exp-month"/>
+            <input type="text" size="2" data-stripe="exp-month"/>
           </label>
           <span> / </span>
-          <input class="card-expiry-year" type="text" size="4" data-quaderno="exp-year"/>
+          <input type="text" size="4" data-stripe="exp-year"/>
         </div>
       </fieldset>
+
+      <input type="hidden" data-stripe="quantity" value=1 />
 
       <button type="submit">Submit Payment</button>
     </form>
 
     <script type="text/javascript">
     // This identifies your website in the createToken call below
+      Stripe.setPublishableKey(document.querySelector("#payment-form").dataset.key);
 
       var stripeResponseHandler = function(status, response) {
         var $form = $('#payment-form');
@@ -421,14 +414,14 @@
           var token = response.id;
 
           // Insert the token into the form so it gets submitted to the server
-          $form.append($('<input type="hidden" data-quaderno="stripeToken" />').val(token));
+          $form.append($('<input type="hidden" data-stripe="stripeToken" />').val(token));
 
           // create the charge in Stripe via Quaderno and submit
           Quaderno.createSubscription({
             success: function(status, response){
               // response contains the message and the Stripe customer id
               var customer_id = response.customer
-              $form.append($('<input type="hidden" data-quaderno="customerID" />').val(customer_id));
+              $form.append($('<input type="hidden" name="customerId" data-stripe="customerID" />').val(customer_id));
               // and re-submit the form
               $form.get(0).submit();
             },
@@ -444,20 +437,11 @@
       jQuery(function($) {
         $('#payment-form').submit(function(e) {
           var $form = $(this);
-          // This identifies your website in the createToken call below
-          Stripe.setPublishableKey($(this).data('gateway-key'));
-
-
 
           // Disable the submit button to prevent repeated clicks
           $form.find('button').prop('disabled', true);
 
-          Stripe.card.createToken({
-            number: $('.card-number').val(),
-            cvc: $('.card-cvc').val(),
-            exp_month: $('.card-expiry-month').val(),
-            exp_year: $('.card-expiry-year').val()
-          }, stripeResponseHandler);
+          Stripe.card.createToken($form, stripeResponseHandler);
 
           // Prevent the form from submitting with the default action
           return false;

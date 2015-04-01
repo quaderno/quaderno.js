@@ -1,6 +1,6 @@
 #Quaderno.js
 
-A library to create Stripe subscriptions and charges, calculate taxes on the fly, and send beautiful invoices. This is the documentation for the v2, if you want the v1 you can find it [here](v1/README.md)
+A library to create Stripe subscriptions and charges, calculate taxes on the fly, and send beautiful invoices.
 
 ##Installing the Quaderno.js library
 
@@ -18,14 +18,14 @@ First, include stripe.js and quaderno.js in the page:
 
 ```
 <script src="https://js.stripe.com/v2/"></script>
-<script src="https://js.quaderno.io/v2/"></script>
+<script src="https://js.quaderno.io/v1/"></script>
 ```
 
 To prevent problems with some older browsers, we recommend putting the script tag in the `<head>` tag of your page, or as a direct descendant of the `<body>` at the end of your page.
 
 You must add some extra data to your classic Stripe form:
 
-* **key:** (mandatory) Your Quaderno publishable key. You can be find it by logging into Quaderno and clicking **Settings > API**
+* **key:** (mandatory) the Stripe publishable key for Quaderno. **Note**: this is different from the regular Stripe Publishable key, as it is used only by Quaderno. The Stripe publishable key for Quaderno can be found in by logging into Quaderno and clicking **Settings > Stripe**
 * **plan:** (mandatory) the plan id.
 * **taxes:** (optional) tells how to calculate the taxes. Can be "included" or "excluded". If not present, it will be calculated as "excluded" as default.
 * **amount:** (optional) the amount of the plan in cents. This is only used to show customers live tax calculations.
@@ -54,7 +54,7 @@ Also, if necessary, you can specify the per-user pricing by setting an optional 
 A complete Quaderno with Stripe form would look like the example below:
 
 ```html
-<form action="" method="POST" id="payment-form" data-key="YOUR_QUADERNO_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
+<form action="" method="POST" id="payment-form" data-key="YOUR_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
     <span class="payment-errors"></span>
 
     <!-- Billing form fields -->
@@ -63,63 +63,63 @@ A complete Quaderno with Stripe form would look like the example below:
       <div class="form-row">
         <label>
           <span>* First Name / Company Name</span>
-          <input data-quaderno="first-name"/>
+          <input data-stripe="first-name"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Last Name</span>
-          <input data-quaderno="last-name"/>
+          <input data-stripe="last-name"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Email</span>
-          <input data-quaderno="email"/>
+          <input data-stripe="email"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Street Line 1</span>
-          <input data-quaderno="street-line-1"/>
+          <input data-stripe="street-line-1"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Street Line 2</span>
-          <input data-quaderno="street-line-2"/>
+          <input data-stripe="street-line-2"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>City</span>
-          <input data-quaderno="city"/>
+          <input data-stripe="city"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Postal Code</span>
-          <input data-quaderno="postal-code"/>
+          <input data-stripe="postal-code"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Region</span>
-          <input data-quaderno="region"/>
+          <input data-stripe="region"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Country</span>
-          <select data-quaderno="country">
+          <select data-stripe="country">
           ...
           </select>
         </label>
@@ -128,14 +128,14 @@ A complete Quaderno with Stripe form would look like the example below:
       <div class="form-row">
         <label>
           <span>VAT Number</span>
-          <input data-quaderno="vat-number"/>
+          <input data-stripe="vat-number"/>
         </label>
       </div>
 
       <div class="form-row">
         <label>
           <span>Coupon</span>
-          <input data-quaderno="coupon"/>
+          <input data-stripe="coupon"/>
         </label>
       </div>
     </fieldset>
@@ -184,8 +184,6 @@ Next, we will want to create a single-use token that can be used to represent th
   jQuery(function($) {
     $('#payment-form').submit(function(event) {
       var $form = $(this);
-      // Ste the Stripe publishable key
-      Stripe.setPublishableKey($form.data('gateway-key'))
 
       // Disable the submit button to prevent repeated clicks
       $form.find('button').prop('disabled', true);
@@ -241,7 +239,7 @@ function stripeResponseHandler(status, response) {
     var token = response.id;
 
     // Insert the token into the form so it gets submitted to the server
-    $form.append($('<input type="hidden" data-quaderno="stripeToken" />').val(token));
+    $form.append($('<input type="hidden" data-stripe="stripeToken" />').val(token));
     Quaderno.createSubscription({
       success: quadernoSuccessHandler(status, response),
       error: quadernoErrorHandler(status, response)
@@ -250,7 +248,7 @@ function stripeResponseHandler(status, response) {
 };
 ```
 
-Please note it is **mandatory** to create the input with the data-quaderno="stripeToken" to make things work properly.
+Please note it is **mandatory** to create the input with the data-stripe="stripeToken" to make things work properly.
 
 After retrieving the card token, now we are ready to create the subscription via Quaderno. The important call is the **Quaderno.createSubscription**.
 
@@ -268,22 +266,8 @@ All the handlers accept two arguments, the status and the response.
 ```js
 {
   message: 'The message of the response as a string.',
-  details: 'A JWT encoded with your Quaderno private key containing the transaction details'
+  customer: 'The id of the created customer in Quaderno (only present if the response was a success).'
 }
-```
-
-The details attribute once decoded using your **Quaderno private key** is a hash with the following attributes:
-
-```ruby
-{
-  gateway: 'The payment gateway used for the transaction.',
-  type: 'The type of the transaction (subscription or charge)',
-  customer: 'The id of the customer generated for the transaction',
-  transaction:'The transaction id (the subscription id or the charge id)',
-  iat: 'A UNIX timestamp'
-
-}
-
 ```
 
 * The success handler code would be something like this:
@@ -291,7 +275,7 @@ The details attribute once decoded using your **Quaderno private key** is a hash
 ```js
 function quadernoSuccessHandler(status, response) {
   $form = $('#payment-form');
-  $form.append($('<input type="hidden" name="transactionDetails" data-quaderno="transactionDetails" />').val(response.details);
+  $form.append($('<input type="hidden" name="customerId" data-stripe="customerID" />').val(response.customer);
   $form.get(0).submit();
 }
 ```
@@ -306,7 +290,7 @@ function quadernoErrorHandler(status, response) {
 }
 ```
 
-* If the success handler is called, it will create an input with the transaction details and will send the form to your server.
+* If the success handler is called, it will create an input with the customer id and will send the form to your server.
 * If the error handler is called it will show the error and reactivate the button
 
 Take a look at the [full example](subscriptions_example.html) form to see everything put together.
@@ -316,7 +300,7 @@ Take a look at the [full example](subscriptions_example.html) form to see everyt
 
 Creating single charges is very similar to creating subscriptions, but in order to prevent fraud some calculations must be made in your backend prior rendering the payment form.
 
-Before showing the payment form to your customer, you must encode a [JSON Web Token](http://jwt.io/) (JWT) with your **Quaderno private key** (**not** your Quaderno public key). You can find the private key under **Settings > API** in Quaderno. This JWT should contain, as minimum data, the amount of the charge in cents and an issuedAt timestamp (called `iat` for short) which defines the seconds since the UNIX epoch. For example:
+Before showing the payment form to your customer, you must encode a [JSON Web Token](http://jwt.io/) (JWT) with your Stripe secret key for Quaderno (**not** your Stripe publishable key). You can find the secret key under **Settings > Stripe** in Quaderno. This JWT should contain, as minimum data, the amount of the charge in cents and an issuedAt timestamp (called `iat` for short) which defines the seconds since the UNIX epoch. For example:
 
 ```json
 {
