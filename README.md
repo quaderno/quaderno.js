@@ -48,14 +48,16 @@ $<span class="quaderno-taxes"></span>
 $<span class="quaderno-total"></span>
 ```
 
-In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. Like the original stripe inputs, the extra inputs also have a `data-stripe` attribute. It is mandatory to include the data-stripe attribute in at least the **first name** input to prevent unexpected results. Including the data-stripe attribute in the **last name**, **country**, **postal code** or **VAT number** is necessary for exact tax calculation.
-Also, if necessary, you can specify the per-user pricing by setting an optional input with the data-stripe **quantity**. By default it is 1.
+In order to calculate the right tax for your customer and create correct contacts in Quaderno it's necessary to add some extra  extra inputs. The extra inputs have a `data-quaderno` attribute. It is mandatory to include the data-quaderno attribute in at least the **first name** input to prevent unexpected results. Including the data-quaderno attribute in the **last name**, **country**, **postal code** or **VAT number** is necessary for exact tax calculation.
+Also, if necessary, you can specify the per-user pricing by setting an optional input with the data-quaderno **quantity**. By default it is 1.
 
 A complete Quaderno with Stripe form would look like the example below:
 
 ```html
 <form action="" method="POST" id="payment-form" data-key="YOUR_QUADERNO_PUBLISHABLE_KEY" data-plan="YOUR_PLAN_ID" data-taxes="excluded" data-amount="900">
     <span class="payment-errors"></span>
+
+    <input type="hidden" data-quaderno="quantity" value=1 />
 
     <!-- Billing form fields -->
     <fieldset>
@@ -166,8 +168,6 @@ A complete Quaderno with Stripe form would look like the example below:
         <input type="text" size="4" data-stripe="exp-year"/>
       </div>
     </fieldset>
-
-    <input type="hidden" data-stripe="quantity" value=1 />
 
     <button type="submit">Submit Payment</button>
 </form>
