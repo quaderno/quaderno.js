@@ -5,7 +5,7 @@
     <title>Quaderno for Stripe Getting Started Form</title>
 
     <!-- The required Stripe lib -->
-    <script src="https://js.stripe.com/v2/"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 
     <!-- The required Quaderno lib -->
     <script src="https://js.quaderno.io/v2/"></script>
@@ -64,7 +64,7 @@
         <div class="form-row">
           <label>
             <span>Street Line 1</span>
-            <input data-quaderno="street-line-1"/>
+            <input id="street-line-1" data-quaderno="street-line-1"/>
           </label>
         </div>
 
@@ -78,14 +78,14 @@
         <div class="form-row">
           <label>
             <span>City</span>
-            <input data-quaderno="city"/>
+            <input id="city" data-quaderno="city"/>
           </label>
         </div>
 
         <div class="form-row">
           <label>
             <span>Postal Code</span>
-            <input data-quaderno="postal-code"/>
+            <input id="postal-code" data-quaderno="postal-code"/>
           </label>
         </div>
 
@@ -380,26 +380,7 @@
       <fieldset>
         <legend>Credit Card Data</legend>
         <div class="form-row">
-          <label>
-            <span>* Card Number</span>
-            <input class="card-number" data-stripe="number"/>
-          </label>
-        </div>
-
-        <div class="form-row">
-          <label>
-            <span>* CVC</span>
-            <input class="card-cvc" data-stripe="cvc" type="password"/>
-          </label>
-        </div>
-
-        <div class="form-row">
-          <label>
-            <span>* Expiration (MM/YYYY)</span>
-            <input class="card-expiry-month" type="text" size="2" data-stripe="exp-month"/>
-          </label>
-          <span> / </span>
-          <input class="card-expiry-year" type="text" size="4" data-stripe="exp-year"/>
+          <div id="card-element" style="width:300px;"></div>
         </div>
       </fieldset>
 
@@ -407,57 +388,70 @@
     </form>
 
     <script type="text/javascript">
-    // This identifies your website in the createToken call below
+      var $form = $('#payment-form');
+      var stripe = null;
+      var elements = null;
+      var card = null;
 
-      var stripeResponseHandler = function(status, response) {
-        var $form = $('#payment-form');
+      var stripeTokenHandler = function(token) {
+        // Insert the token into the form so it gets submitted to the server
+        $form.append($('<input type="hidden" data-quaderno="stripeToken" />').val(token));
 
-        if (response.error) {
-          // Show the errors on the form
-          $form.find('.payment-errors').text(response.error.message);
-          $form.find('button').prop('disabled', false);
-        } else {
-          // token contains id, last4, and card type
-          var token = response.id;
-
-          // Insert the token into the form so it gets submitted to the server
-          $form.append($('<input type="hidden" data-quaderno="stripeToken" />').val(token));
-
-          // create the charge in Stripe via Quaderno and submit
-          Quaderno.createSubscription({
-            success: function(status, response){
-              // response contains the message and the Stripe customer id
-              var customer_id = response.customer
-              $form.append($('<input type="hidden" data-quaderno="customerID" />').val(customer_id));
-              // and re-submit the form
-              $form.get(0).submit();
-            },
-            error: function(status, response){
-              $form.find('.payment-errors').text(response.message);
-              $form.find('button').prop('disabled', false);
-            }
-          });
-
-        }
+        // create the subscription in Stripe via Quaderno and submit
+        Quaderno.createSubscription({
+          success: function(status, response){
+            // response contains the message and the Stripe customer id
+            var customer_id = response.customer
+            $form.append($('<input type="hidden" data-quaderno="customerID" />').val(customer_id));
+            // and re-submit the form
+            $form.get(0).submit();
+          },
+          error: function(status, response){
+            $form.find('.payment-errors').text(response.message);
+            $form.find('button').prop('disabled', false);
+          }
+        });
       };
 
       jQuery(function($) {
-        $('#payment-form').submit(function(e) {
-          var $form = $(this);
-          // This identifies your website in the createToken call below
-          Stripe.setPublishableKey($(this).data('gateway-key'));
+        // initialize Stripe Elements
+        $form.on('gatewayKeyRetrieved.Quaderno', function(e){
+          stripe = Stripe($form.data('gateway-key'));
+          elements = stripe.elements();
 
+          card = elements.create('card', { hidePostalCode: true });
+          card.mount('#card-element');
 
+          // Handle errors
+          card.addEventListener('change', function(event) {
+            var $displayError = $('.payment-errors');
 
-          // Disable the submit button to prevent repeated clicks
-          $form.find('button').prop('disabled', true);
+            if (event.error) {
+              $displayError.html(event.error.message);
+            } else {
+              $displayError.html('');
+            }
+          });
+        })
 
-          Stripe.card.createToken({
-            number: $('.card-number').val(),
-            cvc: $('.card-cvc').val(),
-            exp_month: $('.card-expiry-month').val(),
-            exp_year: $('.card-expiry-year').val()
-          }, stripeResponseHandler);
+        // tokenize the card
+        $form.submit(function(e) {
+          e.preventDefault();
+          stripe.createToken(card, {
+            address_line1: $('#street-line-1').val(),
+            address_city: $('#city').val(),
+            address_zip: $('#postal-code').val(),
+            address_country: $('#quaderno-countries').val()
+          }).then(function(result) {
+            if (result.error) {
+              // Inform the customer that there was an error.
+              $displayError = $('.payment-errors');
+              $displayError.html(event.error.message);
+            } else {
+              // Send the token to your server.
+              stripeTokenHandler(result.token);
+            }
+          });
 
           // Prevent the form from submitting with the default action
           return false;
