@@ -397,7 +397,7 @@
 
       var stripeTokenHandler = function(token) {
         // Insert the token into the form so it gets submitted to the server
-        $form.append($('<input type="hidden" data-quaderno="stripeToken" />').val(token));
+        $form.append($('<input type="hidden" data-quaderno="stripeToken" />').val(token.id));
 
         // create the charge in Stripe via Quaderno and submit
         Quaderno.createCharge({
